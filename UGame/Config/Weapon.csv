@@ -1,0 +1,3 @@
+,Name,Socket,Class,Power,Montage,Play Rate,AnimInstance
+0,Assault,AssaultRifleGrip,BP_CAssault,10,UC_Attack_01_Montage,1.2,BP_CPlayerAssault
+1,Sniper,SniperGrip,BP_CSniper,20,Armed_Attack_Montage,1.5,BP_CPlayerSniper
