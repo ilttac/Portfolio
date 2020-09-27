@@ -85,7 +85,7 @@ ACPlayer::ACPlayer()
 
 	
 	//NoiseEmitter = CreateDefaultSubobject<UPawnNoiseEmitterComponent>("NoiseEmitter");
-	path = "AnimMontage'/Game/ParagonLtBelica/Characters/Heroes/Belica/Animations/Primary_Fire_Med_Montage.Primary_Fire_Med_Montage'";
+	path = "AnimMontage'/Game/Player/ParagonLtBelica/Characters/Heroes/Belica/Animations/Primary_Fire_Med_Montage.Primary_Fire_Med_Montage'";
 
 	ConstructorHelpers::FObjectFinder<UAnimMontage> fire(*path);
 	if (fire.Succeeded())
@@ -234,13 +234,13 @@ void ACPlayer::OnFire()
 	}
 	if (bIsFiring)
 	{
-		float f;
+		float animTime;
 		if (FireMontage != NULL)
 		{
 			UAnimInstance* animInstance = GetMesh()->GetAnimInstance();
 
 			if (animInstance != NULL)
-				f = animInstance->Montage_Play(FireMontage, AttachmentWeapon[(int)CurrentWeapon].PlayRate)/ AttachmentWeapon[(int)CurrentWeapon].PlayRate +0.1f;
+				animTime = animInstance->Montage_Play(FireMontage, AttachmentWeapon[(int)CurrentWeapon].PlayRate)/ AttachmentWeapon[(int)CurrentWeapon].PlayRate +0.1f;
 		}
 
 		if (BulletClass != NULL)
@@ -269,7 +269,7 @@ void ACPlayer::OnFire()
 			FVector start = Camera->GetComponentLocation();
 			FVector end = Camera->GetComponentLocation() + FQuat(Camera->GetComponentRotation()).GetForwardVector() * 1000;//카메라 월드frontvector * 1000.0f;
 
-			DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 0.5f, 0, 3);
+			DrawDebugLine(GetWorld(), start, end, FColor::Transparent, false, 0.5f, 0, 3);
 
 			FCollisionQueryParams params1;
 			params1.AddIgnoredActor(this);
@@ -278,6 +278,7 @@ void ACPlayer::OnFire()
 			(
 				hit, start, end, ECollisionChannel::ECC_PhysicsBody, params1
 			);
+
 			FVector loc;
 			FRotator rotator2;
 			if (hit.GetActor() != NULL)
@@ -300,7 +301,7 @@ void ACPlayer::OnFire()
 
 			GetWorld()->SpawnActor<ACBullet>(BulletClass, location, rotator2, params);
 		}
-		GetWorld()->GetTimerManager().SetTimer(_timer, this, &ACPlayer::OnFire, f, false);
+		GetWorld()->GetTimerManager().SetTimer(_timer, this, &ACPlayer::OnFire, animTime, false);
 	}
 	
 }
