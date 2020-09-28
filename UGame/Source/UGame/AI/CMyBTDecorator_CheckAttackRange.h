@@ -5,7 +5,7 @@
 #include "CMyBTDecorator_CheckAttackRange.generated.h"
 
 UCLASS()
-class U04_COMBAT_API UCMyBTDecorator_CheckAttackRange : public UBTDecorator
+class UGAME_API UCMyBTDecorator_CheckAttackRange : public UBTDecorator
 {
 	GENERATED_BODY()
 

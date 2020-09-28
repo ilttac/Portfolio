@@ -27,14 +27,11 @@ public:
 	class ACWeapon* WeaponActor = NULL;
 	float Power = 0.0f;
 	float PlayRate = 1.0f;
-	class UAnimMontage* Montage = NULL;
-	TSubclassOf<class UAnimInstance> AnimInstance;
-
 	FAttachDelegate AttackDelegate;
 };
 
 UCLASS()
-class UGAME_API ACPlayer : public ACharacter //public IGenericTeamAgentInterface
+class UGAME_API ACPlayer : public ACharacter ,public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 
@@ -77,8 +74,11 @@ public:
 
 	FORCEINLINE bool GetDrawing() { return bDrawing; }
 	FORCEINLINE bool GetSheathing() { return bSheathing; }
+private:
+	FGenericTeamId TeamId;
+public:
 
-	//FGenericTeamId GetGenericTeamId() const { return FGenericTeamId(2); }
+	FGenericTeamId GetGenericTeamId() { return FGenericTeamId(0); }
 
 	FORCEINLINE EAttachmentWeaponType GetCurrentWeaponType() { return CurrentWeapon; }
 	FORCEINLINE FAttachmentWeapon GetCurrentWeapon() { return AttachmentWeapon[(int)CurrentWeapon]; }
@@ -87,6 +87,7 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -110,7 +111,7 @@ private:
 	void OnFire();
 	void StartFire();
 	void StopFire();
-
+	void Die();
 	void OnBowAiming();
 
 private:

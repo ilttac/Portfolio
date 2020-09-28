@@ -5,12 +5,12 @@
 
 UCGameInstance::UCGameInstance()
 {
-	FString CharacterDataPath = TEXT("/Game/Book/GameData/ABCharacterData.ABCharacterData");
+	//FString CharacterDataPath = TEXT("/Game/Book/GameData/ABCharacterData.ABCharacterData");
 
-	static ConstructorHelpers::FObjectFinder<UDataTable> DT_ABCHARACTER(*CharacterDataPath);
-	ABCHECK(DT_ABCHARACTER.Succeeded());
-	ABCharacterTable = DT_ABCHARACTER.Object;
-	ABCHECK(ABCharacterTable->GetRowMap().Num() > 0);
+	//static ConstructorHelpers::FObjectFinder<UDataTable> DT_ABCHARACTER(*CharacterDataPath);
+	//ABCHECK(DT_ABCHARACTER.Succeeded());
+	//ABCharacterTable = DT_ABCHARACTER.Object;
+	//ABCHECK(ABCharacterTable->GetRowMap().Num() > 0);
 }
 
 void UCGameInstance::Init()
@@ -20,5 +20,6 @@ void UCGameInstance::Init()
 
 FABCharacterData* UCGameInstance::GetABCharacterData(int32 Level)
 {
-	return ABCharacterTable->FindRow<FABCharacterData>(*FString::FromInt(Level), TEXT(""));
+	//return ABCharacterTable->FindRow<FABCharacterData>(*FString::FromInt(Level), TEXT(""));
+	return nullptr;
 }

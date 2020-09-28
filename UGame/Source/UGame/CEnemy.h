@@ -21,6 +21,8 @@ private:
 	
 	/*UPROPERTY(EditDefaultsOnly, Category = "Weapon")
 		TSubclassOf<class UCameraShake> CameraShake;*/
+	UPROPERTY(VisibleDefaultsOnly)
+		class UCapsuleComponent* SwordCapsuleR;
 
 	UPROPERTY(VisibleInstanceOnly)
 		class UTextRenderComponent* Text;
@@ -33,7 +35,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
- 
+	UCapsuleComponent* GetSwordCapsuleR() { return SwordCapsuleR; }
 	void BeginAttack();
 	void EndAttack();
 
@@ -52,4 +54,8 @@ private:
 private:
 	float Health;
 	bool bDead;
+private:
+	UFUNCTION()
+		void OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
 };

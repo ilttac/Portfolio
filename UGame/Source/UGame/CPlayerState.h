@@ -52,7 +52,8 @@ public:
 	int GetCurrentAmmo() { return CurrentAmmo; }
 	int GetCurrentMaxAmmo() { return CurrentMaxAmmo;	}
 
-
+	void PlayerTakeDamage(float damage);
+	int GetPlayerHealth() { return Health; }
 
 	void SetCurrentAmmo(EAttachmentWeaponType type);
 	

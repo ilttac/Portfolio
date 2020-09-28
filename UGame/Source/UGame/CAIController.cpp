@@ -9,12 +9,12 @@ ACAIController::ACAIController()
 
 	FString path = L"";
 
-	path = "BehaviorTree'/Game/Enemy/BT.BT'";
+	path = "BehaviorTree'/Game/Enemy/Dusk_BT.Dusk_BT'";
 	ConstructorHelpers::FObjectFinder<UBehaviorTree> bt(*path);
 	if (bt.Succeeded())
 		BT = bt.Object;
 
-	path = "BlackboardData'/Game/Enemy/BB.BB'";
+	path = "BlackboardData'/Game/Enemy/Dusk_BB.Dusk_BB'";
 	ConstructorHelpers::FObjectFinder<UBlackboardData> bb(*path);
 	if (bb.Succeeded())
 		BB = bb.Object;
@@ -42,7 +42,6 @@ ACAIController::ACAIController()
 void ACAIController::BeginPlay()
 {
 	Super::BeginPlay();
-
 	Perception->OnTargetPerceptionUpdated.AddDynamic(this, &ACAIController::OnSensingTarget);
 }
 
@@ -71,6 +70,6 @@ void ACAIController::OnSensingTarget(AActor * Actor, FAIStimulus Stimulus)
 	else
 	{
 		Blackboard->SetValueAsObject("Tracker", NULL);
-		//CLog::Log("NULL");
+		CLog::Log(L"NULL");
 	}
 }

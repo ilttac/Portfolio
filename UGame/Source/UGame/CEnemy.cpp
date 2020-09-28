@@ -13,30 +13,32 @@ ACEnemy::ACEnemy()
 	
 	FString path = L"";
 
-	path = L"Blueprint'/Game/Enemy/BP_CAIController.BP_CAIController_C'";
+	path = L"Blueprint'/Game/Enemy/BP_CAIController2.BP_CAIController2_C'";
 	ConstructorHelpers::FClassFinder<ACAIController> perception(*path);
 	if (perception.Succeeded())
 		AIControllerClass = perception.Class;
 
-	path = L"AnimMontage'/Game/Character/Montages/Hit_Reaction_Montage.Hit_Reaction_Montage'";
+	path = L"AnimMontage'/Game/Enemy/Dusk_HitFornt_Montage01.Dusk_HitFornt_Montage01'";
 	ConstructorHelpers::FObjectFinder<UAnimMontage> hittedMotage(*path);
 	if (hittedMotage.Succeeded())
 		HittedMontage = hittedMotage.Object;
 	
-	path = L"AnimMontage'/Game/Character/Montages/GetHitBackFall_Montage.GetHitBackFall_Montage'";
+	path = L"AnimMontage'/Game/Enemy/Dusk_Death_A_Montage.Dusk_Death_A_Montage'";
 	ConstructorHelpers::FObjectFinder<UAnimMontage> deadMontage(*path);
 	if (deadMontage.Succeeded())
 		DeadMontage = deadMontage.Object;
 
-	path = L"AnimMontage'/Game/Character/Montages/Armed_Attack_Montage.Armed_Attack_Montage'";
+	path = L"AnimMontage'/Game/Enemy/Dusk_Attack_Montage01.Dusk_Attack_Montage01'";
 	ConstructorHelpers::FObjectFinder<UAnimMontage> attackMontage(*path);
 	if (attackMontage.Succeeded())
 		AttackMontage = attackMontage.Object;
 
-	path = L"ParticleSystem'/Game/Character/Particles/PS_Blood_Splatter.PS_Blood_Splatter'";
+	path = L"ParticleSystem'/Game/Enemy/ParagonMinions/FX/Particles/Minions/Minion_melee/FX/Death/P_RangedMinion_Chunks3.P_RangedMinion_Chunks3'";
 	ConstructorHelpers::FObjectFinder<UParticleSystem> particle(*path);
 	if (particle.Succeeded())
 		Particle = particle.Object;
+
+	SwordCapsuleR = CreateDefaultSubobject<UCapsuleComponent>("WeaponCapsule");
 
 	FString text = "";
 	CreateTextRender(GetCapsuleComponent(), text, 100);
@@ -52,7 +54,9 @@ void ACEnemy::BeginPlay()
 	FActorSpawnParameters params;
 	params.Owner = this;
 
-
+	SwordCapsuleR->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), "Sword_R");
+	SwordCapsuleR->OnComponentBeginOverlap.AddDynamic(this, &ACEnemy::OnBeginOverlap);
+	SwordCapsuleR->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 
@@ -94,8 +98,9 @@ float ACEnemy::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AContr
 
 	//HitBack
 	{
+		//GetMesh()->PlayAnimation(Cast<UAnimationAsset>(HittedMontage), false);
 		PlayAnimMontage(HittedMontage, 3.0);
-
+		
 		FVector direction = GetActorForwardVector().GetSafeNormal();
 		direction *= GetCharacterMovement()->Mass * -5.0f;
 
@@ -116,10 +121,18 @@ float ACEnemy::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AContr
 
 	return damage;
 }
+void ACEnemy::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	if (OtherActor == this) return;
+	if (OtherActor == GetOwner()) return;
 
+	UGameplayStatics::ApplyDamage(OtherActor, 20.0f, NULL, GetOwner(), NULL);
+	SwordCapsuleR->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+}
 void ACEnemy::BeginAttack()
 {
-	PlayAnimMontage(AttackMontage, 1.5f);
+	PlayAnimMontage(AttackMontage);
 }
 
 void ACEnemy::EndAttack()

@@ -1,6 +1,6 @@
 #include "CPlayerState.h"
-
-
+#include "Kismet/KismetMathLibrary.h"
+#include "CLog.h"
 ACPlayerState::ACPlayerState()
 {
 	Health = 100.0f;
@@ -70,6 +70,13 @@ void ACPlayerState::SubAmmo(EAttachmentWeaponType type)
 	{
 		SniperAmmo--;
 	}
+}
+
+void ACPlayerState::PlayerTakeDamage(float damage)
+{
+	Health = UKismetMathLibrary::Clamp(Health - damage, 0, 100);
+	CLog::Log(Health);
+	//set HUD ? hud UMG 업데이트 해야함
 }
 
 void ACPlayerState::SetCurrentAmmo(EAttachmentWeaponType type)

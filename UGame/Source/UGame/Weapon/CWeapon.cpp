@@ -19,11 +19,11 @@ void ACWeapon::AttackAction()
 	FAttachmentWeapon weapon = player->GetCurrentWeapon();
 
 
-	UAnimMontage* montage = weapon.Montage;
-	RetNull(montage);
+	//UAnimMontage* montage = weapon.Montage;
+	//RetNull(montage);
 
-	float playRate = weapon.PlayRate;
-	player->PlayAnimMontage(montage, playRate);
+	//float playRate = weapon.PlayRate;
+	//player->PlayAnimMontage(montage, playRate);
 }
 
 void ACWeapon::BeginPlay()

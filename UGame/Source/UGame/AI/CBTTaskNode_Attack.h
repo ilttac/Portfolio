@@ -7,7 +7,7 @@
 
 
 UCLASS()
-class U04_COMBAT_API UCBTTaskNode_Attack : public UBTTaskNode
+class UGAME_API UCBTTaskNode_Attack : public UBTTaskNode
 {
 	GENERATED_BODY()
 

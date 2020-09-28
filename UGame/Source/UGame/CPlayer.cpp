@@ -18,7 +18,7 @@ ACPlayer* ACPlayer::playerInstnace = NULL;
 ACPlayer::ACPlayer()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
+	TeamId = FGenericTeamId(0);
 	//SpringArm = CreateDefaultSubobject<USpringArmComponent>("SpringArm");
 	//SpringArm->SetupAttachment(GetMesh());
 
@@ -63,18 +63,6 @@ ACPlayer::ACPlayer()
 
 		AttachmentWeapon[i].Power = sheet->Power;
 		AttachmentWeapon[i].PlayRate = sheet->PlayRate;
-
-		path = WeaponSheet->GetFullMontagePath(sheet->Montage);
-		ConstructorHelpers::FObjectFinder<UAnimMontage> animMontage(*path);
-
-		if (animMontage.Succeeded()) 
-			AttachmentWeapon[i].Montage = animMontage.Object;
-
-		path = WeaponSheet->GetFullAnimInstancePath(sheet->AnimInstance);
-		ConstructorHelpers::FClassFinder<UCAnimInstance> animInstance(*path);
-
-		if (animInstance.Succeeded())
-			AttachmentWeapon[i].AnimInstance = animInstance.Class;
 	}
 
 	path = L"ParticleSystem'/Game/SciFiWeapLight/FX/Particles/P_Pistol_MuzzleFlash_Dark.P_Pistol_MuzzleFlash_Dark'";
@@ -317,6 +305,10 @@ void ACPlayer::StopFire()
 	bIsFiring = false;
 }
 
+void ACPlayer::Die()
+{
+}
+
 void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -340,6 +332,25 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("Fire", EInputEvent::IE_Released, this, &ACPlayer::StopFire);
 
 	PlayerInputComponent->BindAction("Reload", EInputEvent::IE_Released, this, &ACPlayer::OnReload);
+}
+
+float ACPlayer::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
+{
+	float damage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+	
+	auto AACPlayerState = Cast<ACPlayerState>(GetPlayerState());
+	if (nullptr == AACPlayerState)
+	{
+		return damage;
+	}
+	
+	AACPlayerState->PlayerTakeDamage(damage);
+	AACPlayerState->OnPlayerStateChanged.Broadcast();
+	if (AACPlayerState->GetPlayerHealth() <= 0)
+	{
+		Die();
+	}
+	return damage;
 }
 
 void ACPlayer::BeginEquip(EAttachmentWeaponType Type)

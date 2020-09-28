@@ -4,10 +4,15 @@
 	"Category": "",
 	"Description": "",
 	"Modules": [
-		{
-			"Name": "UGame",
-			"Type": "Runtime",
-			"LoadingPhase": "Default"
-		}
+    {
+      "Name": "UGame",
+      "Type": "Runtime",
+      "LoadingPhase": "Default",
+      "AdditionalDependencies": [
+        "Engine",
+        "CoreUObject",
+        "AIModule"
+      ]
+    }
 	]
 }

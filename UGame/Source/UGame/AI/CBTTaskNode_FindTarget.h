@@ -5,7 +5,7 @@
 #include "CBTTaskNode_FindTarget.generated.h"
 
 UCLASS()
-class U04_COMBAT_API UCBTTaskNode_FindTarget : public UBTTaskNode
+class UGAME_API UCBTTaskNode_FindTarget : public UBTTaskNode
 {
 	GENERATED_BODY()
 
