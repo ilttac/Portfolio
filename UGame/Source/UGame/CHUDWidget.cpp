@@ -53,7 +53,7 @@ void UCHUDWidget::UpdateCharacterStat()
 void UCHUDWidget::UpdatePlayerState()
 {
 	ABCHECK(CurrentPlayerState.IsValid());
-	
+	HPBar->SetPercent(CurrentPlayerState->GetPlayerHPRatio());
 	ExpBar->SetPercent(CurrentPlayerState->GetExpRatio());
 	//PlayerName->SetText(FText::FromString(CurrentPlayerState->GetPlayerName()));
 	PlayerLevel->SetText(FText::FromString(FString::FromInt(CurrentPlayerState->GetCharacterLevel())));

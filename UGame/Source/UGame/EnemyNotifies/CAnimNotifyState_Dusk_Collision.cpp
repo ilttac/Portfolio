@@ -14,7 +14,7 @@ void UCAnimNotifyState_Dusk_Collision::NotifyBegin(USkeletalMeshComponent * Mesh
 	ACEnemy* enemy = Cast<ACEnemy>(MeshComp->GetOwner());
 	if (enemy != NULL)
 	{
-		enemy->GetSwordCapsuleR()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		enemy->GetSwordCapsuleR()->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 		return;
 	}
 

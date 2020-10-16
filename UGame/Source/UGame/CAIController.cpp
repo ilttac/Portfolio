@@ -39,6 +39,12 @@ ACAIController::ACAIController()
 	Perception->ConfigureSense(*Hearing);
 }
 
+void ACAIController::StopAI()
+{
+	GetBrainComponent()->StopLogic("destroy stop");
+	return;
+}
+
 void ACAIController::BeginPlay()
 {
 	Super::BeginPlay();
@@ -51,7 +57,7 @@ void ACAIController::OnPossess(APawn * InPawn)
 
 	if (UseBlackboard(BB, Blackboard))
 		RunBehaviorTree(BT);
-
+	
 	SetActorLabel(InPawn->GetName() + L"Controller");
 }
 

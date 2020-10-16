@@ -3,6 +3,7 @@
 #include "CLog.h"
 ACPlayerState::ACPlayerState()
 {
+	MAX_Health = 100.0f;
 	Health = 100.0f;
 	Death = 0;
 	Max_AssaultAmmo = 40;
@@ -72,9 +73,14 @@ void ACPlayerState::SubAmmo(EAttachmentWeaponType type)
 	}
 }
 
+float ACPlayerState::GetPlayerHPRatio()
+{
+	return (Health < KINDA_SMALL_NUMBER) ? 0.0f : (Health / MAX_Health);
+}
+
 void ACPlayerState::PlayerTakeDamage(float damage)
 {
-	Health = UKismetMathLibrary::Clamp(Health - damage, 0, 100);
+	Health = UKismetMathLibrary::Clamp(Health - damage, 0.0f, 100.0f);
 	CLog::Log(Health);
 	//set HUD ? hud UMG 업데이트 해야함
 }

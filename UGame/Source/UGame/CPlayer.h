@@ -69,6 +69,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 		class UParticleSystem* HitParticle;
+
 public:
 	ACPlayer();
 
@@ -78,7 +79,7 @@ private:
 	FGenericTeamId TeamId;
 public:
 
-	FGenericTeamId GetGenericTeamId() { return FGenericTeamId(0); }
+	virtual FGenericTeamId GetGenericTeamId() const override{ return FGenericTeamId(0); }
 
 	FORCEINLINE EAttachmentWeaponType GetCurrentWeaponType() { return CurrentWeapon; }
 	FORCEINLINE FAttachmentWeapon GetCurrentWeapon() { return AttachmentWeapon[(int)CurrentWeapon]; }

@@ -15,16 +15,21 @@ EBTNodeResult::Type UCBTTaskNode_Attack::ExecuteTask(UBehaviorTreeComponent& Own
 {
 	Super::ExecuteTask(OwnerComp, NodeMemory);
 
+
+	//Dusk
 	ACEnemy* enemy = Cast<ACEnemy>(OwnerComp.GetAIOwner()->GetPawn());
 	RetNullResult(enemy, EBTNodeResult::Failed);
+
 
 	bAttacking = true;
 	enemy->BeginAttack();
 
+
+
 	enemy->OnEndAttack.BindLambda([&]()
-	{
-		bAttacking = false;
-	});
+		{
+			bAttacking = false;
+		});
 
 	return EBTNodeResult::InProgress;
 }

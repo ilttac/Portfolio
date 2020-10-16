@@ -5,6 +5,7 @@
 #include "CPerceptionAIController.h"
 #include "CAIController.h"
 
+
 ACEnemy::ACEnemy()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -18,7 +19,7 @@ ACEnemy::ACEnemy()
 	if (perception.Succeeded())
 		AIControllerClass = perception.Class;
 
-	path = L"AnimMontage'/Game/Enemy/Dusk_HitFornt_Montage01.Dusk_HitFornt_Montage01'";
+	path = L"AnimMontage'/Game/Enemy/Dusk_HitFornt_Montage.Dusk_HitFornt_Montage'";
 	ConstructorHelpers::FObjectFinder<UAnimMontage> hittedMotage(*path);
 	if (hittedMotage.Succeeded())
 		HittedMontage = hittedMotage.Object;
@@ -66,11 +67,11 @@ void ACEnemy::Tick(float DeltaTime)
 
 	FString text = L"";
 	text.Append(GetName());
-	text.Append(":");
+	text.Append(L":");
 	text.Append(FString::FromInt((int)GetActorLocation().X));
-	text.Append(",");
+	text.Append(L",");
 	text.Append(FString::FromInt((int)GetActorLocation().Y));
-	Text->SetText(text);
+	Text->SetText(FText::FromString(text));
 }
 
 float ACEnemy::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
@@ -99,12 +100,12 @@ float ACEnemy::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AContr
 	//HitBack
 	{
 		//GetMesh()->PlayAnimation(Cast<UAnimationAsset>(HittedMontage), false);
-		PlayAnimMontage(HittedMontage, 3.0);
+		PlayAnimMontage(HittedMontage, 1.0);
 		
-		FVector direction = GetActorForwardVector().GetSafeNormal();
-		direction *= GetCharacterMovement()->Mass * -5.0f;
+		//FVector direction = GetActorForwardVector().GetSafeNormal();
+		//direction *= GetCharacterMovement()->Mass * -5.0f;
 
-		LaunchCharacter(direction, true, false);
+		//LaunchCharacter(direction, true, false);
 	}
 
 	//HitEffect
@@ -125,7 +126,6 @@ void ACEnemy::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 {
 	if (OtherActor == this) return;
 	if (OtherActor == GetOwner()) return;
-
 	UGameplayStatics::ApplyDamage(OtherActor, 20.0f, NULL, GetOwner(), NULL);
 	SwordCapsuleR->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
@@ -145,11 +145,11 @@ void ACEnemy::Die()
 	if (bDead == true) return;
 
 	bDead = true;
-
-	float rate = PlayAnimMontage(DeadMontage, 1.0f, "Start");
-
+	float rate = PlayAnimMontage(DeadMontage, 1.0f);
 	FTimerHandle timer;
-	GetWorld()->GetTimerManager().SetTimer(timer, this, &ACEnemy::FinishDie, rate - 1.5f);
+	auto aiController = Cast<ACAIController>(GetController());
+	aiController->StopAI();
+	GetWorld()->GetTimerManager().SetTimer(timer, this, &ACEnemy::FinishDie, rate-0.5f);
 }
 
 void ACEnemy::FinishDie()

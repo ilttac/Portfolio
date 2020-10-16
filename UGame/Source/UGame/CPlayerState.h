@@ -18,6 +18,8 @@ public:
 	
 public:
 	UPROPERTY(Transient)
+		float MAX_Health;
+	UPROPERTY(Transient)
 		float Health;
 	UPROPERTY(Transient)
 		int AssaultAmmo;
@@ -51,9 +53,11 @@ public:
 	int GetSniperAmmo() { return SniperAmmo; }
 	int GetCurrentAmmo() { return CurrentAmmo; }
 	int GetCurrentMaxAmmo() { return CurrentMaxAmmo;	}
+	float GetPlayerHPRatio();
+
 
 	void PlayerTakeDamage(float damage);
-	int GetPlayerHealth() { return Health; }
+	float GetPlayerHealth() { return Health; }
 
 	void SetCurrentAmmo(EAttachmentWeaponType type);
 	

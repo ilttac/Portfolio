@@ -15,6 +15,7 @@ EBTNodeResult::Type UCBTTaskNode_FindTarget::ExecuteTask(UBehaviorTreeComponent 
 
 	ACAIController* controller = Cast<ACAIController>(OwnerComp.GetAIOwner());
 	APawn* pawn = controller->GetPawn();
+\
 
 	UNavigationSystemV1* navSystem = UNavigationSystemV1::GetNavigationSystem(GetWorld());
 	verifyf(navSystem != nullptr, L"navSystem == nullptr");

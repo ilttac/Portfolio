@@ -22,12 +22,13 @@ private:
 
 public:
 	ACAIController();
+	void StopAI();
 
 protected:
 	void BeginPlay() override;
 	void OnPossess(APawn* InPawn) override;
 	void OnUnPossess() override;
-
+	
 private:
 	UFUNCTION()
 		void OnSensingTarget(AActor* Actor, FAIStimulus Stimulus);

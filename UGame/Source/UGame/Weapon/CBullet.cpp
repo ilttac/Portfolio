@@ -1,5 +1,7 @@
 #include "CBullet.h"
 #include "Global.h"
+#include "CEnemy.h"
+#include "CPlayer.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
 ACBullet::ACBullet()
@@ -55,9 +57,22 @@ void ACBullet::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPri
 	if (OtherActor == NULL) return;
 	if (OtherActor == this) return;
 	Destroy();
-	if (OtherComp->IsSimulatingPhysics() == false) return;
+	//if (OtherComp->IsSimulatingPhysics() == false) return;
+
 
 	FString name = OtherActor->GetName();
+	if (name.Contains("Dusk"))
+	{
+		auto enemy = Cast<ACEnemy>(OtherActor);
+		if (enemy != NULL)
+		{
+			auto player = ACPlayer::GetInstance();
+			if (player != NULL)
+			{
+				UGameplayStatics::ApplyDamage(OtherActor, 20.0f, NULL, player, NULL);
+			}
+		}
+	}
 	if (name.Contains("Floor") == true) return;
 	
 	//OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());

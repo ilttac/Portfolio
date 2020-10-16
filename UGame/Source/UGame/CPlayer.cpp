@@ -13,6 +13,7 @@
 #include "Weapon/CWeapon.h"
 #include "Weapon/CBullet.h"
 #include "CPlayerController.h"
+#include "Components/PawnNoiseEmitterComponent.h"
 ACPlayer* ACPlayer::playerInstnace = NULL;
 
 ACPlayer::ACPlayer()
@@ -89,8 +90,10 @@ ACPlayer::ACPlayer()
 	if (hitParticle.Succeeded())
 		HitParticle = hitParticle.Object;
 
-	playerInstnace = this;
 
+	NoiseEmitter = CreateDefaultSubobject<UPawnNoiseEmitterComponent>("NoiseEmitter");
+
+	playerInstnace = this;
 }
 
 void ACPlayer::BeginPlay()
@@ -222,6 +225,7 @@ void ACPlayer::OnFire()
 	}
 	if (bIsFiring)
 	{
+		
 		float animTime;
 		if (FireMontage != NULL)
 		{
@@ -346,7 +350,7 @@ float ACPlayer::TakeDamage(float Damage, FDamageEvent const & DamageEvent, ACont
 	
 	AACPlayerState->PlayerTakeDamage(damage);
 	AACPlayerState->OnPlayerStateChanged.Broadcast();
-	if (AACPlayerState->GetPlayerHealth() <= 0)
+	if (AACPlayerState->GetPlayerHealth() <= 0.0f)
 	{
 		Die();
 	}
@@ -367,4 +371,9 @@ void ACPlayer::BeginEquip(EAttachmentWeaponType Type)
 
 void ACPlayer::EquipWeapon()
 {
+}
+
+void ACPlayer::EmitNoise(float Volume)
+{
+	MakeNoise(Volume, this, GetActorLocation());
 }
