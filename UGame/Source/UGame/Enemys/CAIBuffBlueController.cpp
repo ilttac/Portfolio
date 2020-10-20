@@ -21,9 +21,9 @@ ACAIBuffBlueController::ACAIBuffBlueController()
 
 	Perception = CreateDefaultSubobject<UAIPerceptionComponent>("Perception");
 	Sight = CreateDefaultSubobject<UAISenseConfig_Sight>("Sight");
-	Sight->SightRadius = 500.0f;
+	Sight->SightRadius = 2000.0f;
 	Sight->LoseSightRadius = 600.0f;
-	Sight->PeripheralVisionAngleDegrees = 45.0f;
+	Sight->PeripheralVisionAngleDegrees = 60.0f;
 	Sight->SetMaxAge(5.0f);
 	Sight->DetectionByAffiliation.bDetectEnemies = true;
 	Sight->DetectionByAffiliation.bDetectFriendlies = false;
@@ -32,7 +32,7 @@ ACAIBuffBlueController::ACAIBuffBlueController()
 	Perception->SetDominantSense(*Sight->GetSenseImplementation());
 
 	Hearing = CreateDefaultSubobject<UAISenseConfig_Hearing>("Hearing");
-	Hearing->HearingRange = 1000.0;
+	Hearing->HearingRange = 5000.0;
 	Hearing->DetectionByAffiliation.bDetectEnemies = true;
 	Hearing->DetectionByAffiliation.bDetectFriendlies = false;
 	Hearing->DetectionByAffiliation.bDetectNeutrals = false;

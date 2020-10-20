@@ -14,29 +14,16 @@
 #include "Weapon/CBullet.h"
 #include "CPlayerController.h"
 #include "Components/PawnNoiseEmitterComponent.h"
+#include "Sound/SoundWave.h"
+
 ACPlayer* ACPlayer::playerInstnace = NULL;
 
 ACPlayer::ACPlayer()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	TeamId = FGenericTeamId(0);
-	//SpringArm = CreateDefaultSubobject<USpringArmComponent>("SpringArm");
-	//SpringArm->SetupAttachment(GetMesh());
-
-	////SpringArm->RelativeLocation = FVector(0, 0, 140);
-	////SpringArm->RelativeRotation = FRotator(0, 90, 0);
-	//SpringArm->TargetArmLength = 280.0f;
-	//SpringArm->bUsePawnControlRotation = true;
-	//SpringArm->bEnableCameraLag = true;
-	//SpringArm->CameraLagSpeed = 20.0f;
-	//SpringArm->bDoCollisionTest = false;
 
 	Camera = CreateDefaultSubobject<UCameraComponent>("Camera");
-	//Camera->SetupAttachment(GetMesh());
-	
-	//Camera->RelativeLocation = FVector(-16, 80, 33);
-	//Camera->RelativeRotation = FRotator(-10, 0, 0);
-	//
 
 	Gun = CreateDefaultSubobject<USkeletalMeshComponent>("Gun");
 	Gun->SetupAttachment(RootComponent);
@@ -66,19 +53,13 @@ ACPlayer::ACPlayer()
 		AttachmentWeapon[i].PlayRate = sheet->PlayRate;
 	}
 
+
+	//particle
 	path = L"ParticleSystem'/Game/SciFiWeapLight/FX/Particles/P_Pistol_MuzzleFlash_Dark.P_Pistol_MuzzleFlash_Dark'";
 
 	ConstructorHelpers::FObjectFinder<UParticleSystem> muzzleParticle(*path);
 	if (muzzleParticle.Succeeded())
 		MuzzleParticle = muzzleParticle.Object;
-
-	
-	//NoiseEmitter = CreateDefaultSubobject<UPawnNoiseEmitterComponent>("NoiseEmitter");
-	path = "AnimMontage'/Game/Player/ParagonLtBelica/Characters/Heroes/Belica/Animations/Primary_Fire_Med_Montage.Primary_Fire_Med_Montage'";
-
-	ConstructorHelpers::FObjectFinder<UAnimMontage> fire(*path);
-	if (fire.Succeeded())
-		FireMontage = fire.Object;
 
 	path = L"Blueprint'/Game/Weapon/BP_CBullet.BP_CBullet_C'";;
 	ConstructorHelpers::FClassFinder<ACBullet> bullet(*path);
@@ -90,8 +71,41 @@ ACPlayer::ACPlayer()
 	if (hitParticle.Succeeded())
 		HitParticle = hitParticle.Object;
 
+	////
+
+	////sound
 
 	NoiseEmitter = CreateDefaultSubobject<UPawnNoiseEmitterComponent>("NoiseEmitter");
+
+	path = L"SoundWave'/Game/SciFiWeapLight/Sound/SniperRifle/Wavs/SR_Raise.SR_Raise'";
+	ConstructorHelpers::FObjectFinder<USoundWave> reloadSound(*path);
+	if (reloadSound.Succeeded())
+		ReloadSound = reloadSound.Object;
+
+	path = L"SoundWave'/Game/SciFiWeapLight/Sound/Pistol/Wavs/Pistol_Reload02.Pistol_Reload02'";
+	ConstructorHelpers::FObjectFinder<USoundWave> castSound(*path);
+	if (castSound.Succeeded())
+		CastSound = castSound.Object;
+
+
+
+
+	////
+
+	//animation
+	path = "AnimMontage'/Game/Player/ParagonLtBelica/Characters/Heroes/Belica/Animations/Primary_Fire_Med_Montage.Primary_Fire_Med_Montage'";
+
+	ConstructorHelpers::FObjectFinder<UAnimMontage> fire(*path);
+	if (fire.Succeeded())
+		FireMontage = fire.Object;
+
+	path = L"AnimMontage'/Game/Player/ParagonLtBelica/Characters/Heroes/Belica/Animations/Cast_Montage.Cast_Montage'";
+	ConstructorHelpers::FObjectFinder<UAnimMontage> reload(*path);
+	if (reload.Succeeded())
+		ReloadMontage = reload.Object;
+
+
+	/////
 
 	playerInstnace = this;
 }
@@ -118,7 +132,7 @@ void ACPlayer::BeginPlay()
 
 	Gun->SetSkeletalMesh(AttachmentWeapon[(int)CurrentWeapon].WeaponActor->GetMeshComp()->SkeletalMesh);
 	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), AttachmentWeapon[(int)CurrentWeapon].Socket);
-	
+
 	auto AACPlayerState = Cast<ACPlayerState>(GetPlayerState());
 	ABCHECK(nullptr != AACPlayerState);
 	AACPlayerState->SetCurrentAmmo(CurrentWeapon);
@@ -137,9 +151,9 @@ void ACPlayer::OnMoveForward(float Axis)
 		return;
 	}
 
-	FRotator rotator = FRotator(0,GetControlRotation().Yaw, 0);
+	FRotator rotator = FRotator(0, GetControlRotation().Yaw, 0);
 	FVector forward = FQuat(rotator).GetForwardVector();
-	
+
 	AddMovementInput(forward, Axis);
 }
 
@@ -210,6 +224,15 @@ void ACPlayer::OnSniper()
 }
 void ACPlayer::OnReload()
 {
+	if (ReloadMontage != NULL)
+	{
+		UAnimInstance* animInstance = GetMesh()->GetAnimInstance();
+
+		if (animInstance != NULL)
+			animInstance->Montage_Play(ReloadMontage);
+
+		UGameplayStatics::PlaySound2D(this, ReloadSound);
+	}
 	auto AACPlayerState = Cast<ACPlayerState>(GetPlayerState());
 	ABCHECK(nullptr != AACPlayerState);
 	AACPlayerState->AmmoReload(CurrentWeapon);
@@ -225,14 +248,14 @@ void ACPlayer::OnFire()
 	}
 	if (bIsFiring)
 	{
-		
+
 		float animTime;
 		if (FireMontage != NULL)
 		{
 			UAnimInstance* animInstance = GetMesh()->GetAnimInstance();
 
 			if (animInstance != NULL)
-				animTime = animInstance->Montage_Play(FireMontage, AttachmentWeapon[(int)CurrentWeapon].PlayRate)/ AttachmentWeapon[(int)CurrentWeapon].PlayRate +0.1f;
+				animTime = animInstance->Montage_Play(FireMontage, AttachmentWeapon[(int)CurrentWeapon].PlayRate) / AttachmentWeapon[(int)CurrentWeapon].PlayRate + 0.1f;
 		}
 
 		if (BulletClass != NULL)
@@ -295,7 +318,7 @@ void ACPlayer::OnFire()
 		}
 		GetWorld()->GetTimerManager().SetTimer(_timer, this, &ACPlayer::OnFire, animTime, false);
 	}
-	
+
 }
 
 void ACPlayer::StartFire()
@@ -321,7 +344,7 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAxis("MoveRight", this, &ACPlayer::OnMoveRight);
 	PlayerInputComponent->BindAxis("Turn", this, &ACPlayer::OnTurn);
 	PlayerInputComponent->BindAxis("LookUp", this, &ACPlayer::OnLookUp);
-//	PlayerInputComponent->BindAxis("Zoom", this, &ACPlayer::OnZoom);
+	//	PlayerInputComponent->BindAxis("Zoom", this, &ACPlayer::OnZoom);
 
 	PlayerInputComponent->BindAction("Running", EInputEvent::IE_Pressed, this, &ACPlayer::OnRunning);
 	PlayerInputComponent->BindAction("Running", EInputEvent::IE_Released, this, &ACPlayer::OffRunning);
@@ -341,13 +364,13 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 float ACPlayer::TakeDamage(float Damage, FDamageEvent const & DamageEvent, AController * EventInstigator, AActor * DamageCauser)
 {
 	float damage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
-	
+
 	auto AACPlayerState = Cast<ACPlayerState>(GetPlayerState());
 	if (nullptr == AACPlayerState)
 	{
 		return damage;
 	}
-	
+
 	AACPlayerState->PlayerTakeDamage(damage);
 	AACPlayerState->OnPlayerStateChanged.Broadcast();
 	if (AACPlayerState->GetPlayerHealth() <= 0.0f)
@@ -360,8 +383,15 @@ float ACPlayer::TakeDamage(float Damage, FDamageEvent const & DamageEvent, ACont
 void ACPlayer::BeginEquip(EAttachmentWeaponType Type)
 {
 	//Type 확인은 이전 함수에서 체크함.
-	CurrentWeapon = Type;
+	if (ReloadMontage != NULL)
+	{
+		UAnimInstance* animInstance = GetMesh()->GetAnimInstance();
 
+		if (animInstance != NULL)
+			animInstance->Montage_Play(ReloadMontage);
+		UGameplayStatics::PlaySound2D(this, CastSound);
+	}
+	CurrentWeapon = Type;
 	Gun->SetSkeletalMesh(AttachmentWeapon[(int)CurrentWeapon].WeaponActor->GetMeshComp()->SkeletalMesh);
 	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), AttachmentWeapon[(int)CurrentWeapon].Socket);
 	auto AACPlayerState = Cast<ACPlayerState>(GetPlayerState());

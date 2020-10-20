@@ -11,7 +11,7 @@ class UGAME_API UCMyBTDecorator_CheckAttackRange_BuffBlue : public UBTDecorator
 
 private:
 	UPROPERTY(EditAnywhere)
-		float Range = 200.0f;
+		float Range = 2000.0f;
 
 public:
 	UCMyBTDecorator_CheckAttackRange_BuffBlue();

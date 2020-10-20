@@ -22,7 +22,6 @@ EBTNodeResult::Type UCBTTaskNode_Attack_BuffBlue::ExecuteTask(UBehaviorTreeCompo
 
 	bAttacking = true;
 	buffBlue->BeginAttack();
-
 	buffBlue->OnEndAttack.BindLambda([&]()
 	{
 		bAttacking = false;

@@ -21,6 +21,7 @@ EBTNodeResult::Type UCBTTaskNode_FindTarget::ExecuteTask(UBehaviorTreeComponent 
 	verifyf(navSystem != nullptr, L"navSystem == nullptr");
 
 	FNavLocation location;
+
 	bool b = false;
 	do
 	{

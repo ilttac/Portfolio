@@ -34,13 +34,10 @@ ACBuffBlue_Bullet::ACBuffBlue_Bullet()
 	TrailParticle->SetupAttachment(RootComponent);
 
 	TrailParticle->bAutoActivate = true;
-	path = L"ParticleSystem'/Game/SciFiWeapLight/FX/Particles/P_AssaultRifle_Tracer_Light.P_AssaultRifle_Tracer_Light'";
+	path = L"ParticleSystem'/Game/Enemy/ParagonMinions/FX/Particles/Minions/Dragon/FX/P_Dragon_Fireball_Projectile.P_Dragon_Fireball_Projectile'";
 	ConstructorHelpers::FObjectFinder<UParticleSystem> trailParticle(*path);
 	if (trailParticle.Succeeded())
 		TrailParticle->SetTemplate(trailParticle.Object);
-
-
-
 }
 
 void ACBuffBlue_Bullet::BeginPlay()

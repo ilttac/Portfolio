@@ -61,6 +61,9 @@ private:
 	UPROPERTY(VisibleDefaultsOnly)
 		class UAnimMontage* FireMontage;
 
+	UPROPERTY(VisibleDefaultsOnly)
+		class UAnimMontage* ReloadMontage;
+
 	UPROPERTY(EditDefaultsOnly)
 		TSubclassOf<class ACBullet> BulletClass;
 
@@ -69,6 +72,14 @@ private:
 
 	UPROPERTY(EditDefaultsOnly)
 		class UParticleSystem* HitParticle;
+
+private:
+	UPROPERTY(VisibleDefaultsOnly)
+		class USoundWave* ReloadSound;
+
+	UPROPERTY(VisibleDefaultsOnly)
+		class USoundWave* CastSound;
+
 
 public:
 	ACPlayer();

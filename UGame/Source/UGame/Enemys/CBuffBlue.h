@@ -22,6 +22,8 @@ private:
 	UPROPERTY(VisibleInstanceOnly)
 		class UTextRenderComponent* Text;
 
+	UPROPERTY(EditDefaultsOnly)
+		TSubclassOf<class ACBuffBlue_Bullet> BulletClass;
 public:
 	FOnEndAttackDelegate OnEndAttack;
 	
@@ -33,12 +35,16 @@ public:
 	void BeginAttack();
 	void EndAttack();
 
+	void Fire();
+
+
 protected:
 	virtual void BeginPlay() override;
 
 private:
 	void Die();
 	void FinishDie();
+	
 
 private:
 	class UAnimMontage* HittedMontage;

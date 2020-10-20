@@ -2,6 +2,7 @@
 #include "Global.h"
 #include "CEnemy.h"
 #include "CPlayer.h"
+#include "Enemys\CBuffBlue.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
 ACBullet::ACBullet()
@@ -64,6 +65,19 @@ void ACBullet::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPri
 	if (name.Contains("Dusk"))
 	{
 		auto enemy = Cast<ACEnemy>(OtherActor);
+		if (enemy != NULL)
+		{
+			auto player = ACPlayer::GetInstance();
+			if (player != NULL)
+			{
+				UGameplayStatics::ApplyDamage(OtherActor, 20.0f, NULL, player, NULL);
+			}
+		}
+	}
+
+	if (name.Contains("Buff"))
+	{
+		auto enemy = Cast<ACBuffBlue>(OtherActor);
 		if (enemy != NULL)
 		{
 			auto player = ACPlayer::GetInstance();
