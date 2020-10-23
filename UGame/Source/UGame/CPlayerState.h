@@ -6,6 +6,7 @@
 #include "CPlayer.h"
 #include "CPlayerState.generated.h"
 
+
 DECLARE_MULTICAST_DELEGATE(FOnPlayerStateChangedDelegate);
 
 UCLASS()
@@ -60,7 +61,7 @@ public:
 	float GetPlayerHealth() { return Health; }
 
 	void SetCurrentAmmo(EAttachmentWeaponType type);
-	
+	void SetMaxAmmo(EAttachmentWeaponType type,int count);
 	void InitPlayerData();
 
 	FOnPlayerStateChangedDelegate OnPlayerStateChanged;

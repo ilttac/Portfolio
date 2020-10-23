@@ -395,6 +395,7 @@ void ACPlayer::BeginEquip(EAttachmentWeaponType Type)
 	Gun->SetSkeletalMesh(AttachmentWeapon[(int)CurrentWeapon].WeaponActor->GetMeshComp()->SkeletalMesh);
 	Gun->AttachToComponent(GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), AttachmentWeapon[(int)CurrentWeapon].Socket);
 	auto AACPlayerState = Cast<ACPlayerState>(GetPlayerState());
+	AACPlayerState->OnPlayerStateChanged.Broadcast();
 	ABCHECK(nullptr != AACPlayerState);
 	AACPlayerState->SetCurrentAmmo(CurrentWeapon);
 }

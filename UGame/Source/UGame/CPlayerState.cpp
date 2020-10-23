@@ -1,6 +1,8 @@
 #include "CPlayerState.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "CLog.h"
+
+
 ACPlayerState::ACPlayerState()
 {
 	MAX_Health = 100.0f;
@@ -96,6 +98,22 @@ void ACPlayerState::SetCurrentAmmo(EAttachmentWeaponType type)
 	else if(type == EAttachmentWeaponType::Sniper)
 	{
 		CurrentAmmo = SniperAmmo;
+		CurrentMaxAmmo = Max_SniperAmmo;
+		OnPlayerStateChanged.Broadcast();
+	}
+}
+
+void ACPlayerState::SetMaxAmmo(EAttachmentWeaponType type,int count)
+{
+	if (type == EAttachmentWeaponType::Assault)
+	{
+		Max_AssaultAmmo += count;
+		CurrentMaxAmmo = Max_AssaultAmmo;
+		OnPlayerStateChanged.Broadcast();
+	}
+	else if (type == EAttachmentWeaponType::Sniper)
+	{
+		Max_SniperAmmo += count;
 		CurrentMaxAmmo = Max_SniperAmmo;
 		OnPlayerStateChanged.Broadcast();
 	}

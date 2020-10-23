@@ -3,6 +3,9 @@
 #include "CHUDWidget.h"
 #include "CPlayerState.h"
 
+
+ACPlayerState* ACPlayerController::CPlayerState = NULL;
+
 ACPlayerController::ACPlayerController()
 {
 	static ConstructorHelpers::FClassFinder<UCHUDWidget> UI_HUD_C(TEXT("WidgetBlueprint'/Game/UI/UI_HUD.UI_HUD_C'"));

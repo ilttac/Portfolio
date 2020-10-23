@@ -30,6 +30,7 @@ private:
 	UPROPERTY()
 		class UCHUDWidget* HUDWidget;
 
-	UPROPERTY()
-		class ACPlayerState* CPlayerState;
+	static ACPlayerState* CPlayerState;
+public:
+	FORCEINLINE static ACPlayerState* GetPlayerStateInstnace() { return CPlayerState; }
 };
