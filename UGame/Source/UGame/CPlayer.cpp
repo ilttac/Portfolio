@@ -150,7 +150,6 @@ void ACPlayer::OnMoveForward(float Axis)
 	{
 		return;
 	}
-
 	FRotator rotator = FRotator(0, GetControlRotation().Yaw, 0);
 	FVector forward = FQuat(rotator).GetForwardVector();
 

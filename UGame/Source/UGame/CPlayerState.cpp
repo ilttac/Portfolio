@@ -12,6 +12,8 @@ ACPlayerState::ACPlayerState()
 	Max_SniperAmmo = 10;
 	AssaultAmmo = Max_AssaultAmmo;
 	SniperAmmo = Max_SniperAmmo;
+	RelaodMaxAmmo_Assault = 40;
+	RelaodMaxAmmo_Sniper = 10;
 	CharacterLevel = 1;
 	GameScore = 0;
 	Exp = 0;
@@ -51,12 +53,12 @@ void ACPlayerState::AmmoReload(EAttachmentWeaponType type)
 {
 	if (type == EAttachmentWeaponType::Assault)
 	{
-		AssaultAmmo = Max_AssaultAmmo;
+		AssaultAmmo = RelaodMaxAmmo_Assault;
 		CurrentAmmo = AssaultAmmo;
 	}
 	else if (type == EAttachmentWeaponType::Sniper)
 	{
-		SniperAmmo = Max_SniperAmmo;
+		SniperAmmo = RelaodMaxAmmo_Sniper;
 		CurrentAmmo = SniperAmmo;
 	}
 }

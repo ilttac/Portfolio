@@ -15,7 +15,7 @@ ACBuffBlue::ACBuffBlue()
 
 	FString path = L"";
 
-	path = L"Blueprint'/Game/Enemy/EBuff_Blue/BP_CAIBuffBlueController.BP_CAIBuffBlueController_C'";
+	path = L"Blueprint'/Game/Enemy/EBuff_Blue/BP_CAIBuffBlueController2.BP_CAIBuffBlueController2_C'";
 	ConstructorHelpers::FClassFinder<ACAIBuffBlueController> perception(*path);
 	if (perception.Succeeded())
 		AIControllerClass = perception.Class;
@@ -52,9 +52,7 @@ ACBuffBlue::ACBuffBlue()
 void ACBuffBlue::BeginPlay()
 {
 	Super::BeginPlay();
-
 	Health = MaxHealth;
-
 	FTransform transform = FTransform::Identity;
 	FActorSpawnParameters params;
 	params.Owner = this;
@@ -160,7 +158,22 @@ void ACBuffBlue::EndAttack()
 	OnEndAttack.Execute();
 }
 
-
+void ACBuffBlue::Patrol(FVector Dest, float Speed, float DeltaSeconds)
+{
+	if (FVector::Distance(GetActorLocation(), Dest) <= 1.0f)
+	{
+		OnEndMove.Execute();
+		return;
+	}
+	FVector loc = GetActorLocation();
+	FRotator rotator = UKismetMathLibrary::FindLookAtRotation(loc, Dest);
+	
+	SetActorRotation(rotator);
+	rotator.Normalize();
+	FVector forward = FQuat(rotator).GetForwardVector();
+	AddMovementInput(forward, 1.0f);
+	//SetActorLocation(loc*rotator.Vector()*Speed*DeltaSeconds);
+}
 
 void ACBuffBlue::Die()
 {

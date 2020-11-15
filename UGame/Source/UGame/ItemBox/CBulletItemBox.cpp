@@ -64,10 +64,10 @@ void ACBulletItemBox::PostInitializeComponents()
 
 void ACBulletItemBox::OnCharacterOverlap(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	ABLOG_S(Warning);
 	auto PlayerCharacter = Cast<ACPlayer>(OtherActor);
 	ABCHECK(nullptr != PlayerCharacter);
 	PlayerStateClass = ACPlayerState::StaticClass();
+
 	if (nullptr != PlayerCharacter && nullptr!= PlayerStateClass )
 	{
 		Box->SetHiddenInGame(true, true);

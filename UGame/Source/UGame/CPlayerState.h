@@ -18,21 +18,25 @@ public:
 	ACPlayerState();
 	
 public:
-	UPROPERTY(Transient)
+	UPROPERTY(EditDefaultsOnly)
 		float MAX_Health;
-	UPROPERTY(Transient)
+	UPROPERTY(EditDefaultsOnly)
 		float Health;
-	UPROPERTY(Transient)
+	UPROPERTY(EditDefaultsOnly)
 		int AssaultAmmo;
-	UPROPERTY(Transient)
+	UPROPERTY(EditDefaultsOnly)
 		int SniperAmmo;
-	UPROPERTY(Transient)
-		int Max_AssaultAmmo;
-	UPROPERTY(Transient)
+	UPROPERTY(EditDefaultsOnly)
+		int Max_AssaultAmmo;//³²Àº ÃÑ¾Ë°¹¼öÀÇ ÀÇ¹Ì
+	UPROPERTY(EditDefaultsOnly)
 		int Max_SniperAmmo;
-	UPROPERTY(Transient)
+	UPROPERTY(EditDefaultsOnly)
+		int RelaodMaxAmmo_Assault;
+	UPROPERTY(EditDefaultsOnly)
+		int RelaodMaxAmmo_Sniper;
+	UPROPERTY(EditDefaultsOnly)
 		float Death;
-
+	
 private:
 	UPROPERTY()
 		int CurrentAmmo;

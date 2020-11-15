@@ -32,7 +32,7 @@ EBTNodeResult::Type UCBTTaskNode_FindTarget::ExecuteTask(UBehaviorTreeComponent 
 			location
 		);
 	} while (b == false);
-
+	
 	OwnerComp.GetBlackboardComponent()->SetValueAsVector("Target", location.Location);
 
 	return EBTNodeResult::Succeeded;

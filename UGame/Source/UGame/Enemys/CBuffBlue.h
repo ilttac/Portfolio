@@ -5,7 +5,7 @@
 #include "CBuffBlue.generated.h"
 
 DECLARE_DELEGATE(FOnEndAttackDelegate);
-
+DECLARE_DELEGATE(FOnEndMoveDelegate);
 UCLASS()
 class UGAME_API ACBuffBlue : public ACharacter
 {
@@ -26,7 +26,8 @@ private:
 		TSubclassOf<class ACBuffBlue_Bullet> BulletClass;
 public:
 	FOnEndAttackDelegate OnEndAttack;
-	
+	FOnEndMoveDelegate OnEndMove;
+
 public:	
 	ACBuffBlue();
 	virtual void Tick(float DeltaTime) override;
@@ -34,6 +35,8 @@ public:
 	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 	void BeginAttack();
 	void EndAttack();
+	
+	void Patrol(FVector Dest,float Speed,float DeltaSeconds);
 
 	void Fire();
 

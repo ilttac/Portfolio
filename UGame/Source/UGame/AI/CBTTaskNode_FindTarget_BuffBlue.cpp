@@ -14,12 +14,13 @@ EBTNodeResult::Type UCBTTaskNode_FindTarget_BuffBlue::ExecuteTask(UBehaviorTreeC
 
 	ACAIBuffBlueController* controller = Cast<ACAIBuffBlueController>(OwnerComp.GetAIOwner());
 	APawn* pawn = controller->GetPawn();
-\
+	//ACharacter* character = controller->GetCharacter();
 
 	UNavigationSystemV1* navSystem = UNavigationSystemV1::GetNavigationSystem(GetWorld());
 	verifyf(navSystem != nullptr, L"navSystem == nullptr");
-
+	//controller->MoveToLocation();
 	FNavLocation location;
+	
 	bool b = false;
 	do
 	{
@@ -30,7 +31,7 @@ EBTNodeResult::Type UCBTTaskNode_FindTarget_BuffBlue::ExecuteTask(UBehaviorTreeC
 			location
 		);
 	} while (b == false);
-
+	location.Location.Z = pawn->GetActorLocation().Z + 300;
 	OwnerComp.GetBlackboardComponent()->SetValueAsVector("Target", location.Location);
 
 	return EBTNodeResult::Succeeded;
